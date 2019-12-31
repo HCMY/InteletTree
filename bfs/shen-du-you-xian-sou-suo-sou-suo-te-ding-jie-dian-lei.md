@@ -1,3 +1,7 @@
+---
+description: BFS的思路和二叉树的层次遍历是一样的，BFS一般通过 队列 辅助存储结点信息得以实现。
+---
+
 # 深度优先搜索-搜索特定结点类
 
 ## _1._ N-ary Tree Level Order Traversal
