@@ -10,7 +10,7 @@ Given an n-ary tree, return the level order traversal of its nodes' values.
 
 _Nary-Tree input serialization is represented in their level order traversal, each group of children is separated by the null value \(See examples\)._
 
-![Input: root = \[1,null,3,2,4,null,5,6\] Output: \[\[1\],\[3,2,4\],\[5,6\]\]](../.gitbook/assets/image.png)
+![](../.gitbook/assets/image%20%281%29.png)
 
 题目的目的是把每一层的节点都存储在一个列表中，最后返回一个二维列表
 
