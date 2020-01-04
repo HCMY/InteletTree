@@ -101,11 +101,98 @@ public:
 ```
 ```
 
+### Course Schedule
+
+There are a total of n courses you have to take, labeled from `0` to `n-1`.Some courses may have prerequisites, for example to take course 0 you have to first take course 1, which is expressed as a pair: `[0,1]`Given the total number of courses and a list of prerequisite **pairs**, is it possible for you to finish all courses?
+
+**Example 1:**
+
+```text
+Input: 2, [[1,0]] 
+Output: true
+Explanation: There are a total of 2 courses to take. 
+             To take course 1 you should have finished course 0. So it is possible.
+```
+
+**Example 2:**
+
+```text
+Input: 2, [[1,0],[0,1]]
+Output: false
+Explanation: There are a total of 2 courses to take. 
+             To take course 1 you should have finished course 0, and to take course 0 you should
+             also have finished course 1. So it is impossible.
+```
+
+对于本题，我们可以用一个有向图来表示课程之间的选择关系，例如：  
+在图中，我们用箭头表示依赖关系，图下面的表代表各自结点的入度，在这里也就相当于“选本门课程之前，需要预先完成的课程”。 我们知道选课是不可能有环的，也就是说“选A课程之前必先修B课程，选B之前必先修A课程”，这是矛盾的，也是不可能的，所以题目的主要目的是**判断有向图中的是否存在环的问题**
+
+判断有向图是否存在环，可以用 **拓扑排序** 来做。先不提拓扑排序，先看第一个图，以它为例：  
+我们先  
+1. 用邻接表来表示整个图，并同时构造结点的入度向量  
+2. 把入度为0的结点入队列  
+3. 对队列里的元素进行BFS, 同时对应的结点入度-1，这是BFS的标准操作  
+4.队列为空后，若入度还存在有大于0的结点，那么第一，这个图存在环，第二，不能完成课程  
+比如第一个图 队列pop的结果是 0 1 2 3 4 5 这个序例就是拓扑排序的结果  
   
 
 
-  
+ 
 
+![&#x8BFE;&#x7A0B;&#x5173;&#x7CFB;&#x56FE;](../.gitbook/assets/20200104-151532-de-ping-mu-jie-tu.png)
+
+```cpp
+class Solution {
+public:
+    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {
+
+    	if(numCourses<0)
+    		return false;
+    	if(prerequisites.size()==0)
+    		return true;
+
+        vector<int> in_degree(numCourses,0);
+        map<int, vector<int>> table;
+        queue<int> my_queue;
+
+        // generate indegree and linked table
+        int rows = prerequisites.size();
+        int cols = prerequisites[0].size();
+        for(int i=0;i<rows;i++){
+        	in_degree[prerequisites[i][0]]++;
+        	int key = prerequisites[i][1];
+        	int value = prerequisites[i][0];
+        	if(table.count(key))
+        		table[key].push_back(value);
+        	else
+        		table[key] = {value};
+        }
+        
+        for(int i=0;i<numCourses;i++){
+        	if(in_degree[i]==0)
+        		my_queue.push(i);
+        }
+
+        while(!my_queue.empty()){
+        	int tmp_key = my_queue.front();
+        	for(auto key:table[tmp_key]){
+        		in_degree[key]--;
+        		if(in_degree[key]==0)
+        			my_queue.push(key);
+        	}
+        	my_queue.pop();
+
+        }
+
+        for(auto key:in_degree){
+        	if(in_degree[key]!=0)
+        		return false;
+        }
+
+        return true;
+    }
+};
+```
 
 
 
