@@ -194,9 +194,105 @@ public:
 };
 ```
 
+### Minimum Height Trees
 
+For an undirected graph with tree characteristics, we can choose any node as the root. The result graph is then a rooted tree. Among all possible rooted trees, those with minimum height are called minimum height trees \(MHTs\). Given such a graph, write a function to find all the MHTs and return a list of their root labels.
 
-\*\*\*\*
+**Format**  
+The graph contains `n` nodes which are labeled from `0` to `n - 1`. You will be given the number `n` and a list of undirected `edges` \(each edge is a pair of labels\). You can assume that no duplicate edges will appear in `edges`. Since all edges are undirected, `[0, 1]` is the same as `[1, 0]` and thus will not appear together in `edges`.
 
-\*\*\*\*
+**Example 1 :**
+
+```text
+Input: n = 4, edges = [[1, 0], [1, 2], [1, 3]]
+
+        0
+        |
+        1
+       / \
+      2   3 
+
+Output: [1]
+```
+
+**Example 2 :**
+
+```text
+Input: n = 6, edges = [[0, 3], [1, 3], [2, 3], [4, 3], [5, 4]]
+
+     0  1  2
+      \ | /
+        3
+        |
+        4
+        |
+        5 
+
+Output: [3, 4]
+```
+
+要求找到最小深度的树，每一个结点都有可能是根结点。暴力遍历显然是最简单的，但是不可能通过。因为2个结点互相都是各自的孩子结点，且最后的根结点不可能超过2个。
+
+思路：我们可以从最后一层，也就是结点的度\(包括入度和出度为0或者1的结点）开始，往后BFS，相应的对应结点的父亲结点度-1，这样每次BFS，把度为1的点入队，层层筛选，选择最后一层剩下的那1个或者2个结点，且最后一层只可能存在1或2个结点。
+
+```cpp
+class Solution {
+public:
+    vector<int> findMinHeightTrees(int n, vector<vector<int>>& edges) {
+        vector<int> roots;
+        map<int, vector<int>> linked_table;
+        queue<int> node_queue;
+        vector<int> degree(n,0);
+        vector<int> visited(n,false);
+        // generate linked table;
+         if (edges.size() == 0) {
+            roots.push_back(0);
+            return roots;
+        }
+
+        for(auto node:edges){
+        	degree[node[0]]++;
+        	degree[node[1]]++;
+        	linked_table[node[0]].push_back(node[1]);
+        	linked_table[node[1]].push_back(node[0]);
+        }
+
+        // find degree equal to 0 or 1, push them into queue
+        for(auto node:edges){
+        	if((degree[node[0]]==0 || degree[node[0]]==1)&&(!visited[node[0]])){
+        		node_queue.push(node[0]);
+        		visited[node[0]] = true;
+        	}
+        	if((degree[node[1]]==0 || degree[node[1]]==1)&&(!visited[node[1]])){
+        		node_queue.push(node[1]);
+        		visited[node[1]] = true;
+        	}
+        }
+
+        // start looking for
+        while(!node_queue.empty()){
+        	int queue_current_size = node_queue.size();
+        	roots.clear();//根结点遍历完一层，清空，准备记录下一层的结点
+        	while(queue_current_size){
+        		int tmp_node = node_queue.front();
+        		roots.push_back(tmp_node);
+
+        		for(auto link_tmp_node:linked_table[tmp_node]){
+        			degree[tmp_node]--;
+        			degree[link_tmp_node]--;
+        			if(degree[link_tmp_node]==1 || degree[link_tmp_node]==0 && !visited[link_tmp_node]){
+        				node_queue.push(link_tmp_node);
+        				visited[link_tmp_node] = true;
+        			}
+        		}
+        		
+        		node_queue.pop();
+        		queue_current_size--;
+        	}
+        }
+
+        return roots; 
+    }
+};
+```
 
