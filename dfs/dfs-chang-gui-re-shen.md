@@ -88,3 +88,45 @@ public:
 
 ```
 
+### Convert Sorted Array to Binary Search Tree
+
+Given an array where elements are sorted in ascending order, convert it to a height balanced BST. For this problem, a height-balanced binary tree is defined as a binary tree in which the depth of the two subtrees of _every_ node never differ by more than 1.
+
+**Example:**
+
+```text
+Given the sorted array: [-10,-3,0,5,9],
+
+One possible answer is: [0,-3,9,-10,null,5], which represents the following height balanced BST:
+
+      0
+     / \
+   -3   9
+   /   /
+ -10  5
+```
+
+思路: 因为要构建的是BST，且我们的数组是递增的，刚好BST的中序遍历能得到有序的数组，这样一来我们可以根据二分查找的思想，递归的构建BST
+
+```cpp
+  
+class Solution {
+public:
+    TreeNode* sortedArrayToBST(vector<int>& nums) {
+        return build_tree(nums,0,nums.size()-1);
+    }
+
+    TreeNode *build_tree(vector<int> nums, int left,int right){
+    	if(left>right) return NULL;
+
+    	int mid_idx = (left+right)/2;
+    	TreeNode *new_node = new TreeNode(nums[mid_idx]);
+    	
+    	new_node->left = build_tree(nums,left,mid_idx-1);
+    	new_node->right = build_tree(nums,mid_idx+1,right);
+        
+        return new_node;
+    }
+};
+```
+
