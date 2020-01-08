@@ -17,4 +17,5 @@
 
 * [DFS-常规/热身](dfs/dfs-chang-gui-re-shen.md)
 * [DFS+递归](dfs/dfs+-di-gui.md)
+* [DFS-栈](dfs/dfs-zhan.md)
 
