@@ -75,3 +75,45 @@ public:
 };
 ```
 
+### Keys and Rooms
+
+There are `N` rooms and you start in room `0`.  Each room has a distinct number in `0, 1, 2, ..., N-1`, and each room may have some keys to access the next room. Formally, each room `i` has a list of keys `rooms[i]`, and each key `rooms[i][j]` is an integer in `[0, 1, ..., N-1]` where `N = rooms.length`.  A key `rooms[i][j] = v` opens the room with number `v`.Initially, all the rooms start locked \(except for room `0`\). You can walk back and forth between rooms freely. Return `true` if and only if you can enter every room.
+
+**Example 1:**
+
+```text
+Input: [[1],[2],[3],[]]
+Output: true
+Explanation:  
+We start in room 0, and pick up key 1.
+We then go to room 1, and pick up key 2.
+We then go to room 2, and pick up key 3.
+We then go to room 3.  Since we were able to go to every room, we return true.
+```
+
+思路：DFS+递归遍历，同时记录下访问了的room,最后看是否还有room没有被访问到
+
+```cpp
+class Solution {
+public:
+    bool canVisitAllRooms(vector<vector<int>>& rooms) {
+    	if(rooms.size()<=1)
+    		return true;
+        vector<bool> visited(rooms.size(),false);
+        DFS(rooms,visited,0);
+        for(auto item:visited)
+        	if(item==false)
+        		return false;
+        return true;
+    }
+
+    void DFS(const vector<vector<int>> rooms, vector<bool> &visited,int visited_room){
+    	visited[visited_room] = true;
+    	for(auto next_room:rooms[visited_room]){
+    		if(!visited[next_room])
+    			DFS(rooms,visited,next_room);
+    	}
+    }
+};
+```
+
