@@ -36,7 +36,6 @@ Given the above grid, return `6`. Note the answer is not 11, because the island 
 ```cpp
 public:
 	vector<vector<int>> directions={{1,0},{-1,0},{0,1},{0,-1}};
-
     int maxAreaOfIsland(vector<vector<int>>& grid) {
     		if (grid.empty() || grid[0].empty()) return 0;
     		
