@@ -12,6 +12,7 @@ f(n) = f(n-1)+f(n-2)+...+f(2)+f(1)+1
 
 using namespace std;
 
+/*
 class Solution {
 public:
     int jumpFloorII(int number) {
@@ -26,10 +27,29 @@ public:
     	return sum;
     }
 };
+*/
+
+class Solution {
+public:
+    int jumpFloorII(int number) {
+    	
+    	if(number==0) return 0;
+    	if(number==1) return 1;
+
+    	int sum = 1;
+    	int pre = 1;
+    	for(int i=1;i<number;i++){
+    		sum += pre;
+    		pre = sum; 
+    	}
+    	return sum;
+    }
+};
+
 
 int main(int argc, char const *argv[])
 {
 	Solution solu;
-	cout<<solu.jumpFloorII(4);
+	cout<<solu.jumpFloorII(5);
 	return 0;
 }
