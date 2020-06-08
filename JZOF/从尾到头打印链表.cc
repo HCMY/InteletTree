@@ -80,3 +80,28 @@ public:
 
     }
 };
+
+
+class Solution {
+public:
+    vector<int> reversePrint(ListNode* head) {
+    	ListNode *curr_node = head;
+    	ListNode *pre_node = nullptr;
+    	ListNode *next;
+
+    	while(curr_node){
+    		next = curr_node->next;
+    		curr_node->next = pre_node;
+    		pre_node = curr_node;
+    		curr_node =  next;
+    	}
+
+    	vector<int> res;
+    	while(pre_node){
+    		res.push_back(pre_node->val);
+    		pre_node = pre_node->next;
+    	}
+
+    	return res;
+    }
+};
